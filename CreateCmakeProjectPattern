@@ -1,0 +1,131 @@
+#!/bin/bash
+touch CMakeLists.txt
+echo "cmake_minimum_required (VERSION 3.2)
+
+if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
+	project( $1 VERSION 0.0.\$ENV{TRAVIS_BUILD_NUMBER})
+else()
+	project( $1 VERSION 99.99.999)
+endif()
+
+add_subdirectory (\${PROJECT_SOURCE_DIR}/libs)
+add_subdirectory (\${PROJECT_SOURCE_DIR}/src)
+add_subdirectory (\${PROJECT_SOURCE_DIR}/test)" >  CMakeLists.txt
+
+touch buildProject
+echo "#!/bin/bash
+mkdir -p buildRelease/ && cd buildRelease/
+cmake ..
+cmake --build .
+cmake --build . --target test
+cmake --build . --target package" > buildProject
+
+chmod +x buildProject
+
+touch clearBuild
+echo "#!/bin/bash
+rm -rf buildRelease/*" > clearBuild
+
+chmod +x clearBuild
+
+mkdir -p src
+mkdir -p test
+mkdir -p libs && cd libs
+
+touch CMakeLists.txt
+echo "cmake_minimum_required(VERSION 3.2)
+
+add_library(lib$2 STATIC lib_$2.cpp lib_$2.h)
+set_target_properties(lib$2  PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED ON)
+target_include_directories(lib$2 PRIVATE \${CMAKE_BINARY_DIR})
+
+if(MSVC)
+	target_compile_options(lib$2 PRIVATE /W4)
+else()
+ 	target_compile_options(lib$2 PRIVATE -Wall -Wextra -Werror)
+endif()" >  CMakeLists.txt
+
+touch lib_$2.cpp
+echo "#include \"lib_$2.h\" 
+void foo(){}" > lib_$2.cpp
+
+touch lib_$2.h
+echo "void foo();" > lib_$2.h
+
+cd ../src
+
+touch CMakeLists.txt
+echo "cmake_minimum_required(VERSION 3.2)
+
+add_executable($1 main.cpp)
+set_target_properties($1 PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQIRED ON)
+target_link_libraries($1 PRIVATE lib$2)
+
+if(MSVC)
+	target_compile_options($1 PRIVATE /W4)
+else()
+	target_compile_options($1 PRIVATE -Wall -Wextra -Werror)
+endif()
+
+install(TARGETS $1 RUNTIME DESTINATION bin)
+
+set(CPACK_GENERATOR DEB)
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+
+set(CPACK_PACKAGE_CONTACT gavl.andr96@gmail.com)
+
+include(CPack)" > CMakeLists.txt
+
+touch main.cpp
+echo "#include \"../libs/lib_$2.h\" 
+int main(){
+foo();
+return 0;
+}" > main.cpp
+
+cd ../test
+touch CMakeLists.txt
+echo "cmake_minimum_required(VERSION 3.2)
+enable_testing()
+
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIR})
+add_executable(gtest_$2 test_$2.cpp)
+
+set_target_properties(gtest_$2 
+	PROPERTIES 
+	CXX_STANDARD 14
+	CXX_STANDARD_REQUIRED ON
+	INCLUDE_DIRECTORIES \${GTEST_INCLUDE_DIRS})
+	
+				
+if(MSVC)
+	target_compile_options(gtest_$2 PRIVATE /W4)
+else()
+	target_compile_options(gtest_$2 PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
+							
+target_link_libraries(gtest_$2 gtest pthread lib$2)
+							
+add_test(gtest_$2_test1 gtest_$2)" > CMakeLists.txt
+
+touch test_$2.cpp
+echo "
+#include <gtest/gtest.h>
+
+TEST(gtest_$2_test1, test_Sample){
+ASSERT_TRUE(true);
+}
+
+
+int main (int argc, char** argv) {
+	testing::InitGoogleTest(&argc, argv);
+		return RUN_ALL_TESTS();
+	}" > test_$2.cpp
+
+cd ..
+./buildProject
