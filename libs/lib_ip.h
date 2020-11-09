@@ -5,14 +5,6 @@
 #include <list>
 #include <vector>
 
-void foo();
-
-
-class ip_printer
-{   
-    public:
-
-        
         template <typename T>
         using is_stritg = std::is_same<T,   std::string> ;
         
@@ -21,35 +13,26 @@ class ip_printer
 
         template <typename T>
         using is_vector = std::is_same<T,   std::vector<typename T::value_type, typename T::allocator_type>> ;
-       
         //for integral 
         template <typename T1>
-        friend typename std::enable_if_t<std::is_integral<T1>::value, void> loadInfo (T1& data, ip_printer& printer){
+        typename std::enable_if_t<std::is_integral<T1>::value, void> loadInfo (T1& data){
             auto raw_byte = reinterpret_cast<uint8_t*>(&data);
-            std::array<uint8_t, sizeof(T1)> arr{*raw_byte};
-                for(auto &i : arr)
-                    std::cout << static_cast<int>(i) << ".";
-              (void)(printer);
+            for(uint8_t i = sizeof(T1)-1; i > 0; std::cout << static_cast<int>(raw_byte[i--]) <<".");
+            std::cout << static_cast<int>(raw_byte[0]) << std::endl;
         }
 
         //for string 
         template <typename T1>
-        friend typename std::enable_if_t<is_stritg<T1>::value, void> loadInfo (T1& data, ip_printer& printer){
-            printer.m_data = data; 
-            (void)(data);
-            printer.print();}
+        typename std::enable_if_t<is_stritg<T1>::value, void> loadInfo (T1& data){ std::cout << data << std::endl;}
 
         //for vector and list
         template <typename T1>
-        friend typename std::enable_if_t<is_vector<T1>::value || is_list<T1>::value, void> loadInfo (T1& data, ip_printer& printer) { 
-             printer.m_data = std::string{"is container"};
-            (void)(data);
-            printer.print();
+        typename std::enable_if_t<is_vector<T1>::value || is_list<T1>::value, void> loadInfo (T1& data) { 
+            for (auto it = data.begin(); it != data.end();)
+            {
+                 std::cout << static_cast<int>(*(it++));
+                 if (it != data.end()) 
+                    std::cout <<  ".";
+            }
+            std::cout << std::endl;
         }
-
-        ip_printer(): m_data{"empty"}{}
-        
-        void print() { std::cout << m_data << std::endl; }
-    private: 
-        std::string m_data;
-};
