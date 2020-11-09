@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.8) 
 
 add_executable(ip_address main.cpp)
 set_target_properties(ip_address PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQIRED ON)

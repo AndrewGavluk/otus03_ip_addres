@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.8)
 
 add_library(libip STATIC lib_ip.cpp lib_ip.h)
 set_target_properties(libip  PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED ON)

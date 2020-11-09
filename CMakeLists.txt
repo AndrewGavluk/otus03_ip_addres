@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.2)
+cmake_minimum_required (VERSION 3.8)
 
 if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
 	project( ip_address VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
@@ -9,3 +9,4 @@ endif()
 add_subdirectory (${PROJECT_SOURCE_DIR}/libs)
 add_subdirectory (${PROJECT_SOURCE_DIR}/src)
 add_subdirectory (${PROJECT_SOURCE_DIR}/test)
+

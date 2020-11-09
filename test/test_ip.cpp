@@ -1,8 +1,11 @@
 
 #include <gtest/gtest.h>
+#include "../libs/lib_ip.h"
 
-TEST(gtest_ip_test1, test_Sample){
-ASSERT_TRUE(true);
+
+TEST(gtest_ip_test1, test_string){
+
+	ASSERT_TRUE(true);
 }
 
 
