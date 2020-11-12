@@ -3,25 +3,25 @@
 int main(){
 
 	char testChar{-1};
-	loadInfo(testChar);
+	printInfo(testChar);
 
 	short testshort{0};
-	loadInfo(testshort);
+	printInfo(testshort);
 
 	int testInt{2130706433};
-	loadInfo(testInt);
+	printInfo(testInt);
 
 	long testLong{8875824491850138409};
-	loadInfo(testLong);
+	printInfo(testLong);
 
 	std::string testString ("mySitename.com");	
-	loadInfo(testString);
+	printInfo(testString);
 
 	std::vector<int> testVector{1,2,3,4};
-	loadInfo(testVector);
+	printInfo(testVector);
 
 	std::list<int> testList{1,2,3,4};
-	loadInfo(testList); 
+	printInfo(testList); 
 
 return 0;
 }
