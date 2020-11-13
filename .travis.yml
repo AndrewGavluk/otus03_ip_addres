@@ -1,5 +1,18 @@
 language: cpp
-before_script:
+compiler: gcc
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-7
+      - g++-7
+      - doxygen
+      - graphviz
+
+install:
 - sudo apt-get install libgtest-dev -y
 - cd /usr/src/gtest
 - sudo env "PATH=$PATH" cmake CMakeLists.txt
