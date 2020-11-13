@@ -26,6 +26,14 @@ script:
   - doxygen Doxyfile
 
 deploy:
+ 
+ - provider: script
+    skip_cleanup: true
+    on:
+      branch: master
+    script:
+  - curl -T ip_printer-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uandrewgavluk:$BINTRAY_API_KEY "https://api.bintray.com/content/andrewgavluk/Otus-1/otus-3_ip_printer/$TRAVIS_BUILD_NUMBER/ip_printer-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+  
   - provider: pages
     skip-cleanup: true
     github-token: $GITHUB_TOKEN
@@ -33,9 +41,4 @@ deploy:
     local-dir: html
     on:
       branch: master
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: master
-    script:
-  - curl -T ip_printer-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uandrewgavluk:$BINTRAY_API_KEY "https://api.bintray.com/content/andrewgavluk/Otus-1/otus-3_ip_printer/$TRAVIS_BUILD_NUMBER/ip_printer-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+ 
