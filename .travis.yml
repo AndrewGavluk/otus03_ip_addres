@@ -13,6 +13,8 @@ addons:
       - graphviz
 
 install:
+- export CC=gcc-7
+- export CXX=g++-7
 - sudo apt-get install doxygen -y
 - sudo apt-get install libgtest-dev -y
 - cd /usr/src/gtest
