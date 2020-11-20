@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.8) 
 
-if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
-	project( ip_printer VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
-else()
-	project( ip_printer VERSION 99.99.999)
-endif()
 add_executable(ip_printer main.cpp)
 set_target_properties(ip_printer PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQIRED ON)
 target_link_libraries(ip_printer PRIVATE libip)
