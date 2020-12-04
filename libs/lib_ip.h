@@ -10,7 +10,7 @@
 *   @tparam T - template param to check
 */
 template <typename T>
-using is_stritg = std::is_same<T,   std::string> ;
+using is_string = std::is_same<T,   std::string> ;
         
 /*!
 *   @brief Simple template predicate to check list-type
@@ -44,7 +44,7 @@ typename std::enable_if_t<std::is_integral<T1>::value, void> printInfo (T1& data
 *   @param data - param, expected stritg, stritg representation of ip adress
 */ 
 template <typename T1>
-typename std::enable_if_t<is_stritg<T1>::value, void> printInfo (T1& data){ std::cout << data << std::endl;}
+typename std::enable_if_t<is_string<T1>::value, void> printInfo (T1& data){ std::cout << data << std::endl;}
      
 /*!
 *   @brief SFINAE template for container type
